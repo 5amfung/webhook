@@ -47,7 +47,7 @@ export function CodeBlock({
       <div className="absolute right-2 top-2 z-10">
         <CopyButton value={formatted} />
       </div>
-      <pre className="overflow-auto rounded-lg border border-border/40 bg-muted/30 p-4 pr-10 font-mono text-xs leading-relaxed text-foreground/80">
+      <pre className="overflow-auto whitespace-pre-wrap break-all rounded-lg border border-border/40 bg-muted/30 p-4 pr-10 font-mono text-xs leading-relaxed text-foreground/80">
         <code>{formatted}</code>
       </pre>
     </div>
