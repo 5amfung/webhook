@@ -13,25 +13,6 @@ skills:
     load: "node_modules/.pnpm/@tanstack+start-client-core@1.167.2/node_modules/@tanstack/start-client-core/skills/start-core/deployment/SKILL.md"
 <!-- intent-skills:end -->
 
-## Server Functions & File Boundaries
-
-Data fetching and mutations use `createServerFn()` from `@tanstack/react-start`. These run on the server and are called from route loaders or client components. See `apps/web/src/workspace/workspace.functions.ts` for examples.
-
-Split server-side code by responsibility using these file roles:
-
-| Suffix             | Role                                                                                         |
-| ------------------ | -------------------------------------------------------------------------------------------- |
-| `*.functions.ts`   | `createServerFn` wrappers — safe to import anywhere; only the handler runs on the server.    |
-| `*.server.ts`      | Server-only helpers (DB queries, internal logic, secrets). Import only from server contexts. |
-| `*.ts` (no suffix) | Client-safe shared code (types, schemas, constants, pure utilities).                         |
-
-**Import rules:**
-
-- Never import `*.server.ts` from client-safe files or route components.
-- Only `*.functions.ts` (and other `*.server.ts` files) may import `*.server.ts`.
-- Routes call server functions from `*.functions.ts`.
-
-
 ## Command Execution Rules
 
 - **Always run from the project root.** Never `cd` into subdirectories.
@@ -39,6 +20,7 @@ Split server-side code by responsibility using these file roles:
 - **Use `pnpm` for package management.** Never use `npm`, `yarn`, `bun`, or `npx`.
 - **Pre-approve CLIs**: Before executing a multi-step task, identify **all** CLI tools needed (`pnpm`, `git`, `node`, `find`, `python3`, etc.) and run a benign command for each (e.g., `--version`) to trigger permission approval upfront. Avoids and minimizes interruptions mid-task.
 - **Subagents follow the same rules.** Include these rules in subagent prompts.
+- **Use rg (ripgrep) over grep command** for performance gain.
 
 ## Do Not
 
