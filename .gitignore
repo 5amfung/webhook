@@ -71,6 +71,9 @@ dist/
 .claude/settings.local.json
 .claude/worktrees
 
+# Superpowers brainstorm sessions
+.superpowers/
+
 # Scaffold temp directory
 temp/
 
