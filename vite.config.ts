@@ -7,6 +7,10 @@ import tailwindcss from "@tailwindcss/vite"
 import { nitro } from "nitro/vite"
 
 const config = defineConfig({
+  // Configure Nitro to scan the server/ directory for routes and utilities.
+  nitro: {
+    serverDir: "server",
+  },
   plugins: [
     devtools(),
     nitro(),
