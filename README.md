@@ -1,21 +1,51 @@
-# TanStack Start + shadcn/ui
+# Webhook Inspector
 
-This is a template for a new TanStack Start project with React, TypeScript, and shadcn/ui.
+A local development tool for capturing and inspecting incoming webhook requests in real-time. Self-hosted alternative to RequestBin/Webhook.site.
 
-## Adding components
+Built with TanStack Start, React 19, Vite, and shadcn/ui.
 
-To add components to your app, run the following command:
+## Getting Started
 
 ```bash
-npx shadcn@latest add button
+pnpm install
+pnpm run dev
 ```
 
-This will place the ui components in the `components` directory.
+Open http://localhost:3000 in your browser.
 
-## Using components
+## Usage
 
-To use the components in your app, import them as follows:
+Point your webhook provider at the catch-all endpoint:
 
-```tsx
-import { Button } from "@/components/ui/button";
 ```
+http://localhost:3000/api/webhook/<any-path>
+```
+
+All HTTP methods are accepted (GET, POST, PUT, PATCH, DELETE, etc.). Requests appear on the dashboard in real-time.
+
+### Quick Test
+
+```bash
+curl -X POST http://localhost:3000/api/webhook/test \
+  -H "Content-Type: application/json" \
+  -d '{"hello":"world"}'
+```
+
+## Features
+
+- **Catch-all endpoint** — `/api/webhook/**` captures any path and HTTP method
+- **Real-time updates** — SSE pushes new webhooks to the dashboard instantly
+- **Request inspection** — view headers, query parameters, and body in a sliding detail pane
+- **JSON formatting** — JSON bodies are pretty-printed automatically
+- **Copy buttons** — one-click copy for URLs, headers, values, and payloads
+- **Responsive** — detail pane slides from right on desktop, bottom on mobile
+- **In-memory storage** — no database required, stores up to 500 requests (resets on server restart)
+
+## Tech Stack
+
+- [TanStack Start](https://tanstack.com/start) — full-stack React framework
+- [TanStack React Query](https://tanstack.com/query) — server state management
+- [Nitro](https://nitro.build) — server engine (API routes, SSE)
+- [shadcn/ui](https://ui.shadcn.com) — UI components
+- [Tailwind CSS](https://tailwindcss.com) — styling
+- [Vite](https://vite.dev) — build tool
