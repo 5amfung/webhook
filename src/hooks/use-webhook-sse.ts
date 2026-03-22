@@ -11,7 +11,12 @@ export function useWebhookSSE(): void {
     const eventSource = new EventSource("/api/events")
 
     eventSource.addEventListener("webhook", (event) => {
-      const webhook: WebhookRequest = JSON.parse(event.data)
+      let webhook: WebhookRequest
+      try {
+        webhook = JSON.parse(event.data)
+      } catch {
+        return
+      }
 
       queryClient.setQueryData<WebhookRequest[]>(
         WEBHOOKS_QUERY_KEY,

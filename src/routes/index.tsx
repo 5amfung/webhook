@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { createFileRoute } from "@tanstack/react-router"
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { Globe, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { WebhookList } from "@/components/webhook-list"
@@ -30,10 +30,14 @@ function Dashboard() {
     setDetailOpen(true)
   }
 
+  const queryClient = useQueryClient()
+
   const handleClear = async () => {
-    await clearWebhooksFn()
+    // Optimistically clear the cache before the SSE event arrives.
+    queryClient.setQueryData(WEBHOOKS_QUERY_KEY, [])
     setSelectedWebhook(null)
     setDetailOpen(false)
+    await clearWebhooksFn()
   }
 
   const webhookUrl =
