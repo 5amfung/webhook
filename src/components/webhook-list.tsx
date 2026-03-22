@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react"
-import { Card, CardContent } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import {
   Tooltip,
@@ -12,7 +11,7 @@ import type { WebhookRequest } from "@/lib/types"
 const TIMESTAMP_REFRESH_MS = 5000
 
 function formatRelativeTime(timestamp: number, now: number): string {
-  const diffSeconds = Math.floor((now - timestamp) / 1000)
+  const diffSeconds = Math.max(0, Math.floor((now - timestamp) / 1000))
   if (diffSeconds < 5) return "just now"
   if (diffSeconds < 60) return `${diffSeconds}s ago`
   const diffMinutes = Math.floor(diffSeconds / 60)
@@ -50,44 +49,44 @@ export function WebhookList({
 
   return (
     <ScrollArea className="flex-1">
-      <div className="space-y-2 p-1">
+      <div className="divide-y divide-border/30">
         {webhooks.map((webhook) => (
-          <Card
+          <div
             key={webhook.id}
-            className={`cursor-pointer transition-colors hover:bg-muted/50 ${
-              selectedId === webhook.id ? "border-primary/50 bg-muted/30" : ""
+            className={`group flex cursor-pointer items-center gap-3 px-5 py-3 transition-colors hover:bg-muted/30 ${
+              selectedId === webhook.id
+                ? "border-l-2 border-l-primary bg-muted/20"
+                : "border-l-2 border-l-transparent"
             }`}
             onClick={() => onSelect(webhook)}
           >
-            <CardContent className="flex items-center gap-3 p-3">
-              <MethodBadge method={webhook.method} />
-              <span className="flex-1 truncate font-mono text-sm">
-                /{webhook.path}
+            <MethodBadge method={webhook.method} />
+            <span className="flex-1 truncate font-mono text-sm text-foreground/90">
+              /{webhook.path}
+            </span>
+            {webhook.contentType && (
+              <span className="text-muted-foreground hidden font-mono text-[11px] sm:inline">
+                {webhook.contentType.split(";")[0]}
               </span>
-              {webhook.contentType && (
-                <span className="text-muted-foreground hidden text-xs sm:inline">
-                  {webhook.contentType.split(";")[0]}
-                </span>
-              )}
-              {webhook.size > 0 && (
-                <span className="text-muted-foreground text-xs">
-                  {formatSize(webhook.size)}
-                </span>
-              )}
-              <Tooltip>
-                {/* Use render prop to avoid a nested button, since the card is already clickable. */}
-                <TooltipTrigger
-                  render={<span />}
-                  className="text-muted-foreground w-16 text-right text-xs"
-                >
-                  {formatRelativeTime(webhook.timestamp, now)}
-                </TooltipTrigger>
-                <TooltipContent>
-                  {new Date(webhook.timestamp).toLocaleString()}
-                </TooltipContent>
-              </Tooltip>
-            </CardContent>
-          </Card>
+            )}
+            {webhook.size > 0 && (
+              <span className="text-muted-foreground font-mono text-[11px] tabular-nums">
+                {formatSize(webhook.size)}
+              </span>
+            )}
+            <Tooltip>
+              {/* Use render prop to avoid a nested button, since the row is already clickable. */}
+              <TooltipTrigger
+                render={<span />}
+                className="text-muted-foreground w-16 text-right font-mono text-[11px] tabular-nums"
+              >
+                {formatRelativeTime(webhook.timestamp, now)}
+              </TooltipTrigger>
+              <TooltipContent>
+                {new Date(webhook.timestamp).toLocaleString()}
+              </TooltipContent>
+            </Tooltip>
+          </div>
         ))}
       </div>
     </ScrollArea>

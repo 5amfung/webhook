@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils"
+import { CopyButton } from "@/components/copy-button"
 
 interface CodeBlockProps {
   content: string
@@ -28,20 +29,27 @@ export function CodeBlock({
 }: CodeBlockProps) {
   if (isBinary) {
     return (
-      <div className={cn("text-muted-foreground rounded-md border p-4", className)}>
+      <div
+        className={cn(
+          "text-muted-foreground rounded-lg border border-border/40 p-4 text-sm",
+          className,
+        )}
+      >
         Binary payload ({size} bytes)
       </div>
     )
   }
 
+  const formatted = formatBody(content, contentType)
+
   return (
-    <pre
-      className={cn(
-        "bg-muted overflow-auto rounded-md p-4 text-sm leading-relaxed",
-        className
-      )}
-    >
-      <code>{formatBody(content, contentType)}</code>
-    </pre>
+    <div className={cn("relative", className)}>
+      <div className="absolute right-2 top-2 z-10">
+        <CopyButton value={formatted} />
+      </div>
+      <pre className="overflow-auto rounded-lg border border-border/40 bg-muted/30 p-4 pr-10 font-mono text-xs leading-relaxed text-foreground/80">
+        <code>{formatted}</code>
+      </pre>
+    </div>
   )
 }
