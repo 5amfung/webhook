@@ -48,8 +48,9 @@ Tests for the in-memory FIFO store (`server/lib/webhook-store.ts`):
 | Test | Description |
 |------|-------------|
 | addWebhook / getWebhook | Store and retrieve a webhook by ID |
-| getAllWebhooks ordering | Returns webhooks in reverse chronological order |
+| getAllWebhooks ordering | Returns webhooks newest-first; assert index 0 is the most recently inserted item by insertion order |
 | FIFO eviction at capacity | Adding webhook #501 evicts the oldest entry |
+| Ordering after eviction | After inserting 501 items, `getAllWebhooks()` returns newest-first with the evicted item absent |
 | clearAllWebhooks | Empties the store and insertion order |
 | getWebhook unknown ID | Returns `undefined` for nonexistent ID |
 
@@ -70,7 +71,9 @@ Tests for the EventEmitter singleton (`server/lib/event-bus.ts`):
 
 ### `tests/server/routes/webhook-handler.test.ts`
 
-Tests for the catch-all webhook route handler (`server/routes/api/webhook/[...].ts`). The handler is tested by importing it and invoking with mock H3 events.
+Tests for the catch-all webhook route handler (`server/routes/api/webhook/[...].ts`).
+
+**H3 event strategy**: Import `h3` directly (not `nitro/h3`) and use its `createEvent` utility with mock Node `IncomingMessage`/`ServerResponse` objects to construct valid H3 events. The handler's `defineEventHandler` returns a plain async function that accepts an H3 event — we call that function directly. Module-level imports of `nitro/h3` in the handler file need to be aliased to `h3` in `vitest.config.ts` via `resolve.alias` so the handler can be imported in a bare Vitest Node process without the Nitro runtime. A `h3` dev dependency may need to be added if it is not already resolvable.
 
 | Test | Description |
 |------|-------------|
@@ -78,6 +81,7 @@ Tests for the catch-all webhook route handler (`server/routes/api/webhook/[...].
 | GET request | No body parsed, size is 0 |
 | Query param parsing | Single and repeated query parameter keys |
 | Path extraction | `/api/webhook/foo/bar` extracts path as `foo/bar` |
+| Empty path segment | `/api/webhook` and `/api/webhook/` both extract path as `"/"` |
 | 413 on oversized body | Body > 1MB returns `{ error: "Payload too large" }` |
 | Binary content type | Non-text content type results in base64 body, `isBinary: true` |
 | Event bus emission | `webhookEventBus` emits after webhook is stored |
@@ -99,7 +103,7 @@ Tests for the catch-all webhook route handler (`server/routes/api/webhook/[...].
 | Renders copy icon | Button is visible |
 | Copies to clipboard on click | Mock `navigator.clipboard.writeText`, verify called with value |
 | Shows check icon after copy | Icon switches to checkmark after click |
-| Reverts after timeout | After 2000ms (fake timers), icon returns to copy |
+| Reverts after timeout | After 2000ms (fake timers), icon returns to copy. Use `vi.useRealTimers()` in `afterEach` to prevent timer leaks. |
 
 ### `tests/components/code-block.test.tsx`
 
@@ -108,20 +112,20 @@ Tests for the catch-all webhook route handler (`server/routes/api/webhook/[...].
 | Renders text content | Displays raw body string |
 | Pretty-prints JSON | Valid JSON + `application/json` renders formatted |
 | Handles invalid JSON | Malformed JSON renders as-is without crashing |
-| Binary payload message | `isBinary: true` shows "Binary payload (N bytes)" |
+| Binary payload message | `isBinary: true` with `size={1024}` shows "Binary payload (1024 bytes)" |
 | Copy button present | CopyButton rendered for text content |
 
 ## Coverage Summary
 
 | Layer | File | Tests | Environment |
 |-------|------|-------|-------------|
-| Server unit | webhook-store.test.ts | 5 | Node |
+| Server unit | webhook-store.test.ts | 6 | Node |
 | Server unit | event-bus.test.ts | 4 | Node |
-| Server integration | webhook-handler.test.ts | 7 | Node |
+| Server integration | webhook-handler.test.ts | 8 | Node |
 | Component | method-badge.test.tsx | 3 | jsdom |
 | Component | copy-button.test.tsx | 4 | jsdom |
 | Component | code-block.test.tsx | 5 | jsdom |
-| **Total** | **6 files** | **~28** | |
+| **Total** | **6 files** | **~30** | |
 
 ## Out of Scope
 
