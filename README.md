@@ -49,3 +49,14 @@ curl -X POST http://localhost:3000/api/webhook/test \
 - [shadcn/ui](https://ui.shadcn.com) — UI components
 - [Tailwind CSS](https://tailwindcss.com) — styling
 - [Vite](https://vite.dev) — build tool
+
+## Deploy to Railway
+
+Deployment is configured via [`railway.json`](railway.json) — it defines the build command, start command, region, and healthcheck so no manual environment variables or CLI flags are needed.
+
+From the repo root, with the [Railway CLI](https://docs.railway.com/cli) installed and logged in:
+
+```bash
+railway init --name webhook   # once per project
+railway up --detach -m "deploy"
+```

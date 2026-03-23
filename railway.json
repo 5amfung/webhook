@@ -1,0 +1,16 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "build": {
+    "buildCommand": "pnpm run build"
+  },
+  "deploy": {
+    "startCommand": "node .output/server/index.mjs",
+    "multiRegionConfig": {
+      "us-west2": {
+        "numReplicas": 1
+      }
+    },
+    "healthcheckPath": "/",
+    "healthcheckTimeout": 300
+  }
+}
