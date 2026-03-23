@@ -1,14 +1,14 @@
 import { useState } from "react"
 import { createFileRoute } from "@tanstack/react-router"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { Radio, Trash2, Terminal, Zap } from "lucide-react"
+import { Radio, Terminal, Trash2, Zap } from "lucide-react"
+import { clearWebhooksFn, getWebhooksFn } from "../../server/functions/webhooks"
+import type { WebhookRequest } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { WebhookList } from "@/components/webhook-list"
 import { WebhookDetailPane } from "@/components/webhook-detail-pane"
 import { CopyButton } from "@/components/copy-button"
-import { useWebhookSSE, WEBHOOKS_QUERY_KEY } from "@/hooks/use-webhook-sse"
-import { getWebhooksFn, clearWebhooksFn } from "../../server/functions/webhooks"
-import type { WebhookRequest } from "@/lib/types"
+import { WEBHOOKS_QUERY_KEY, useWebhookSSE } from "@/hooks/use-webhook-sse"
 
 export const Route = createFileRoute("/")({
   component: Dashboard,

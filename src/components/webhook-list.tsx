@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
+import type { WebhookRequest } from "@/lib/types"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import {
   Tooltip,
@@ -6,7 +7,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { MethodBadge } from "@/components/method-badge"
-import type { WebhookRequest } from "@/lib/types"
 
 const TIMESTAMP_REFRESH_MS = 5000
 
@@ -28,7 +28,7 @@ function formatSize(bytes: number): string {
 }
 
 interface WebhookListProps {
-  webhooks: WebhookRequest[]
+  webhooks: Array<WebhookRequest>
   onSelect: (webhook: WebhookRequest) => void
   selectedId: string | null
 }

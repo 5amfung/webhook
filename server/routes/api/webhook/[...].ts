@@ -1,4 +1,4 @@
-import { defineEventHandler, getMethod, getRequestURL, getHeaders, readBody, setResponseStatus } from "nitro/h3"
+import { defineEventHandler, getHeaders, getMethod, getRequestURL, readBody, setResponseStatus } from "nitro/h3"
 import { addWebhook } from "../../../lib/webhook-store"
 import { webhookEventBus } from "../../../lib/event-bus"
 import type { WebhookRequest } from "../../../../src/lib/types"
@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
   const path = fullPath.replace(/^\/api\/webhook\/?/, "") || "/"
 
   // Parse query params.
-  const queryParams: Record<string, string | string[]> = {}
+  const queryParams: Record<string, string | Array<string>> = {}
   requestUrl.searchParams.forEach((value, key) => {
     const existing = queryParams[key]
     if (existing) {
