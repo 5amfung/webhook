@@ -1,4 +1,4 @@
-import { defineEventHandler, getHeaders, getMethod, getRequestURL, readBody, setResponseStatus } from "nitro/h3"
+import { defineEventHandler, getHeaders, getMethod, getRequestURL, readRawBody, setResponseStatus } from "nitro/h3"
 import { addWebhook } from "../../../lib/webhook-store"
 import { webhookEventBus } from "../../../lib/event-bus"
 import type { WebhookRequest } from "../../../../src/lib/types"
@@ -48,9 +48,9 @@ export default defineEventHandler(async (event) => {
 
   if (method !== "GET" && method !== "HEAD") {
     try {
-      const rawBody = await readBody(event)
+      const rawBody = await readRawBody(event)
       if (rawBody != null) {
-        const bodyStr = typeof rawBody === "string" ? rawBody : JSON.stringify(rawBody)
+        const bodyStr = rawBody
         size = new TextEncoder().encode(bodyStr).length
 
         if (size > MAX_BODY_SIZE) {
