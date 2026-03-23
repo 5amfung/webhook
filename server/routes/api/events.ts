@@ -1,4 +1,4 @@
-import { defineEventHandler, createEventStream } from "nitro/h3"
+import { createEventStream, defineEventHandler } from "nitro/h3"
 import { webhookEventBus } from "../../lib/event-bus"
 import type { WebhookRequest } from "../../../src/lib/types"
 

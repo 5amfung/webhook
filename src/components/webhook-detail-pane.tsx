@@ -1,3 +1,4 @@
+import type { WebhookRequest } from "@/lib/types"
 import {
   Sheet,
   SheetContent,
@@ -18,7 +19,6 @@ import { MethodBadge } from "@/components/method-badge"
 import { CodeBlock } from "@/components/code-block"
 import { CopyButton } from "@/components/copy-button"
 import { useIsMobile } from "@/hooks/use-is-mobile"
-import type { WebhookRequest } from "@/lib/types"
 
 interface WebhookDetailPaneProps {
   webhook: WebhookRequest | null
@@ -26,7 +26,7 @@ interface WebhookDetailPaneProps {
   onOpenChange: (open: boolean) => void
 }
 
-function KeyValueTable({ data }: { data: Record<string, string | string[]> }) {
+function KeyValueTable({ data }: { data: Record<string, string | Array<string>> }) {
   const entries = Object.entries(data)
 
   if (entries.length === 0) {

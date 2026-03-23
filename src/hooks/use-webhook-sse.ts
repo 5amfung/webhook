@@ -18,7 +18,7 @@ export function useWebhookSSE(): void {
         return
       }
 
-      queryClient.setQueryData<WebhookRequest[]>(
+      queryClient.setQueryData<Array<WebhookRequest>>(
         WEBHOOKS_QUERY_KEY,
         (old = []) => {
           // Deduplicate by id to handle reconnection overlap.

@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/require-await -- TanStack Start handlers require async signatures. */
 import { createServerFn } from "@tanstack/react-start"
 import {
+  clearAllWebhooks,
   getAllWebhooks,
   getWebhook,
-  clearAllWebhooks,
 } from "../lib/webhook-store"
 import { webhookEventBus } from "../lib/event-bus"
 
