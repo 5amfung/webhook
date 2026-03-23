@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi, afterEach } from "vitest"
-import { render, screen, act, cleanup, fireEvent } from "@testing-library/react"
+import { afterEach, describe, expect, it, vi } from "vitest"
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { CopyButton } from "../../src/components/copy-button"
 
@@ -49,7 +49,7 @@ describe("CopyButton", () => {
     render(<CopyButton value="test" />)
 
     // Use fireEvent (synchronous) to avoid userEvent timer deadlocks under fake timers.
-    await act(async () => {
+    await act(() => {
       fireEvent.click(screen.getByRole("button"))
     })
 
