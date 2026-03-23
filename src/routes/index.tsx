@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { createFileRoute } from "@tanstack/react-router"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { Radio, Terminal, Trash2, Zap } from "lucide-react"
@@ -49,10 +49,11 @@ function Dashboard() {
     await clearWebhooksFn()
   }
 
-  const webhookUrl =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/api/webhook/`
-      : "/api/webhook/"
+  const [webhookUrl, setWebhookUrl] = useState("/api/webhook/")
+
+  useEffect(() => {
+    setWebhookUrl(`${window.location.origin}/api/webhook/`)
+  }, [])
 
   const curlCommand = buildCurlCommand(webhookUrl)
 
