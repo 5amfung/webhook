@@ -104,8 +104,8 @@ Contents:
 
 ### 5.3 `CODE_OF_CONDUCT.md`
 
-Contributor Covenant v2.1 — the industry standard.
-Enforcement contact: private vulnerability reporting (Contributor Covenant v2.1 requires a non-public contact method).
+Contributor Covenant v3.0 — the latest industry standard.
+Enforcement contact: private vulnerability reporting (Contributor Covenant requires a non-public contact method).
 
 ### 5.4 `SECURITY.md`
 
