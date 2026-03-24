@@ -1,5 +1,7 @@
 import type { WebhookRequest } from "../../src/lib/types"
 
+export const TEST_SESSION_ID = "test-session-00000000"
+
 let counter = 0
 
 export function createWebhookFixture(
