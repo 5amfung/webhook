@@ -40,13 +40,9 @@ export default defineEventHandler(async (event) => {
   const headers = getHeaders(event)
   const contentType = headers["content-type"] ?? null
 
-  // Extract path after /api/webhook/<sessionId>/.
-  const fullPath = requestUrl.pathname
-  const prefix = `/api/webhook/${sessionId}`
-  const remaining = fullPath.startsWith(prefix)
-    ? fullPath.slice(prefix.length)
-    : fullPath
-  const path = remaining.replace(/^\//, "") || "/"
+  // Extract the catch-all rest path from router params.
+  const restPath = (params._0 as string | undefined) ?? ""
+  const path = restPath.replace(/^\//, "") || "/"
 
   // Parse query params.
   const queryParams: Record<string, string | Array<string>> = {}
