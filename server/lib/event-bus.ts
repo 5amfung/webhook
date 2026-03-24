@@ -2,12 +2,12 @@ import { EventEmitter } from "node:events"
 import type { WebhookRequest } from "../../src/lib/types"
 
 class WebhookEventBus extends EventEmitter {
-  emitWebhook(webhook: WebhookRequest): void {
-    this.emit("webhook", webhook)
+  emitWebhook(sessionId: string, webhook: WebhookRequest): void {
+    this.emit(`webhook:${sessionId}`, webhook)
   }
 
-  emitClear(): void {
-    this.emit("clear")
+  emitClear(sessionId: string): void {
+    this.emit(`clear:${sessionId}`)
   }
 }
 
