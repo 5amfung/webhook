@@ -1,13 +1,22 @@
 import { EventEmitter } from "node:events"
 import type { WebhookRequest } from "../../src/lib/types"
 
+// Each SSE connection registers 2 listeners (webhook + clear).
+// Allow up to 50 concurrent connections before warning.
+const MAX_LISTENERS = 100
+
 class WebhookEventBus extends EventEmitter {
-  emitWebhook(webhook: WebhookRequest): void {
-    this.emit("webhook", webhook)
+  constructor() {
+    super()
+    this.setMaxListeners(MAX_LISTENERS)
   }
 
-  emitClear(): void {
-    this.emit("clear")
+  emitWebhook(sessionId: string, webhook: WebhookRequest): void {
+    this.emit(`webhook:${sessionId}`, webhook)
+  }
+
+  emitClear(sessionId: string): void {
+    this.emit(`clear:${sessionId}`)
   }
 }
 

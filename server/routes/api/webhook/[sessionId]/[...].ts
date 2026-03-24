@@ -1,7 +1,15 @@
-import { defineEventHandler, getHeaders, getMethod, getRequestURL, readRawBody, setResponseStatus } from "nitro/h3"
-import { addWebhook } from "../../../lib/webhook-store"
-import { webhookEventBus } from "../../../lib/event-bus"
-import type { WebhookRequest } from "../../../../src/lib/types"
+import {
+  defineEventHandler,
+  getHeaders,
+  getMethod,
+  getRequestURL,
+  getRouterParams,
+  readRawBody,
+  setResponseStatus,
+} from "nitro/h3"
+import { addWebhook, sessionExists } from "../../../../lib/webhook-store"
+import { webhookEventBus } from "../../../../lib/event-bus"
+import type { WebhookRequest } from "../../../../../src/lib/types"
 
 const MAX_BODY_SIZE = 1024 * 1024 // 1MB.
 
@@ -19,14 +27,23 @@ function isTextContentType(contentType: string | null): boolean {
 }
 
 export default defineEventHandler(async (event) => {
+  const params = getRouterParams(event)
+  const sessionId = params.sessionId
+
+  if (!sessionId || !sessionExists(sessionId)) {
+    setResponseStatus(event, 404)
+    return { error: "Session not found" }
+  }
+
   const method = getMethod(event)
   const requestUrl = getRequestURL(event)
   const headers = getHeaders(event)
   const contentType = headers["content-type"] ?? null
 
-  // Extract path after /api/webhook/.
-  const fullPath = requestUrl.pathname
-  const path = fullPath.replace(/^\/api\/webhook\/?/, "") || "/"
+  // Extract the catch-all rest path from router params.
+  // Nitro uses "_" as the key for unnamed catch-all segments ([...]).
+  const restPath = (params._ as string | undefined) ?? ""
+  const path = restPath.replace(/^\//, "") || "/"
 
   // Parse query params.
   const queryParams: Record<string, string | Array<string>> = {}
@@ -84,8 +101,8 @@ export default defineEventHandler(async (event) => {
     size,
   }
 
-  addWebhook(webhook)
-  webhookEventBus.emitWebhook(webhook)
+  addWebhook(sessionId, webhook)
+  webhookEventBus.emitWebhook(sessionId, webhook)
 
   return { received: true, id: webhook.id }
 })

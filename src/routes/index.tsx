@@ -2,13 +2,17 @@ import { useEffect, useState } from "react"
 import { createFileRoute } from "@tanstack/react-router"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { Radio, Terminal, Trash2, Zap } from "lucide-react"
-import { clearWebhooksFn, getWebhooksFn } from "../../server/functions/webhooks"
+import {
+  clearWebhooksFn,
+  getSessionFn,
+  getWebhooksFn,
+} from "../../server/functions/webhooks"
 import type { WebhookRequest } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { WebhookList } from "@/components/webhook-list"
 import { WebhookDetailPane } from "@/components/webhook-detail-pane"
 import { CopyButton } from "@/components/copy-button"
-import { WEBHOOKS_QUERY_KEY, useWebhookSSE } from "@/hooks/use-webhook-sse"
+import { useWebhookSSE, webhooksQueryKey } from "@/hooks/use-webhook-sse"
 
 export const Route = createFileRoute("/")({
   component: Dashboard,
@@ -26,13 +30,22 @@ function Dashboard() {
   const [selectedWebhook, setSelectedWebhook] =
     useState<WebhookRequest | null>(null)
   const [detailOpen, setDetailOpen] = useState(false)
+  const [sessionId, setSessionId] = useState<string | null>(null)
+
+  // Resolve session on mount.
+  useEffect(() => {
+    getSessionFn().then(setSessionId)
+  }, [])
+
+  const queryKey = sessionId ? webhooksQueryKey(sessionId) : ["webhooks", ""]
 
   const { data: webhooks = [] } = useQuery({
-    queryKey: WEBHOOKS_QUERY_KEY,
+    queryKey,
     queryFn: () => getWebhooksFn(),
+    enabled: !!sessionId,
   })
 
-  useWebhookSSE()
+  useWebhookSSE(sessionId)
 
   const handleSelect = (webhook: WebhookRequest) => {
     setSelectedWebhook(webhook)
@@ -43,17 +56,19 @@ function Dashboard() {
 
   const handleClear = async () => {
     // Optimistically clear the cache before the SSE event arrives.
-    queryClient.setQueryData(WEBHOOKS_QUERY_KEY, [])
+    queryClient.setQueryData(queryKey, [])
     setSelectedWebhook(null)
     setDetailOpen(false)
     await clearWebhooksFn()
   }
 
-  const [webhookUrl, setWebhookUrl] = useState("/api/webhook/")
+  const [webhookUrl, setWebhookUrl] = useState("")
 
   useEffect(() => {
-    setWebhookUrl(`${window.location.origin}/api/webhook/`)
-  }, [])
+    if (sessionId) {
+      setWebhookUrl(`${window.location.origin}/api/webhook/${sessionId}/`)
+    }
+  }, [sessionId])
 
   const curlCommand = buildCurlCommand(webhookUrl)
 
@@ -107,7 +122,7 @@ function Dashboard() {
         <div className="bg-muted/50 flex flex-1 items-center gap-2 rounded-md border border-border/50 px-3 py-1.5">
           <Zap className="text-primary size-3 shrink-0" />
           <code className="flex-1 truncate font-mono text-xs font-medium">
-            {webhookUrl}
+            {webhookUrl || "Loading..."}
           </code>
           <CopyButton value={webhookUrl} />
         </div>
