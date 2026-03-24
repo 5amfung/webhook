@@ -2,6 +2,7 @@ import type { WebhookRequest } from "../../src/lib/types"
 
 const MAX_WEBHOOKS_PER_SESSION = 100
 const SESSION_TTL_MS = 24 * 60 * 60 * 1000 // 24 hours.
+const CLEANUP_INTERVAL_MS = 60 * 60 * 1000 // 1 hour.
 
 interface Session {
   createdAt: number
@@ -83,6 +84,10 @@ export function cleanExpiredSessions(): void {
 export function clearAllSessions(): void {
   sessions.clear()
 }
+
+// Run session cleanup every hour. unref() prevents this timer from
+// keeping the Node.js process (and Vitest) alive.
+setInterval(cleanExpiredSessions, CLEANUP_INTERVAL_MS).unref()
 
 // Test-only helper to manipulate session internals.
 export function _getSessionForTest(sessionId: string): Session | undefined {
