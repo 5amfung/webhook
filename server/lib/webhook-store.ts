@@ -16,9 +16,11 @@ interface Session {
 // creating duplicate Maps if we use a plain module-level variable.
 const SESSIONS_KEY = "__webhook_sessions__"
 
-const sessions: Map<string, Session> =
-  (globalThis as Record<string, unknown>)[SESSIONS_KEY] as Map<string, Session>
-  ?? ((globalThis as Record<string, unknown>)[SESSIONS_KEY] = new Map<string, Session>())
+const global = globalThis as Record<string, unknown>
+if (!global[SESSIONS_KEY]) {
+  global[SESSIONS_KEY] = new Map<string, Session>()
+}
+const sessions = global[SESSIONS_KEY] as Map<string, Session>
 
 export function createSession(): string {
   const id = crypto.randomUUID()

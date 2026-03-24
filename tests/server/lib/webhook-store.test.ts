@@ -1,15 +1,15 @@
 import { beforeEach, describe, expect, it } from "vitest"
 import {
+  _getSessionForTest,
   addWebhook,
-  clearAllWebhooks,
   cleanExpiredSessions,
+  clearAllSessions,
+  clearAllWebhooks,
   createSession,
   getAllWebhooks,
   getOrCreateSession,
   getWebhook,
   sessionExists,
-  clearAllSessions,
-  _getSessionForTest,
 } from "../../../server/lib/webhook-store"
 import { createWebhookFixture } from "../../helpers/webhook-factory"
 
@@ -143,7 +143,7 @@ describe("webhook-store", () => {
   })
 
   describe("session TTL", () => {
-    it("cleanExpiredSessions removes sessions inactive for over 24 hours", async () => {
+    it("cleanExpiredSessions removes sessions inactive for over 24 hours", () => {
       const sessionId = createSession()
       addWebhook(sessionId, createWebhookFixture())
 
