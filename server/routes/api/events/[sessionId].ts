@@ -1,10 +1,24 @@
-import { createEventStream, defineEventHandler } from "nitro/h3"
-import { webhookEventBus } from "../../lib/event-bus"
-import type { WebhookRequest } from "../../../src/lib/types"
+import {
+  createEventStream,
+  defineEventHandler,
+  getRouterParams,
+  setResponseStatus,
+} from "nitro/h3"
+import { webhookEventBus } from "../../../lib/event-bus"
+import { sessionExists } from "../../../lib/webhook-store"
+import type { WebhookRequest } from "../../../../src/lib/types"
 
 const KEEPALIVE_INTERVAL_MS = 30_000
 
 export default defineEventHandler((event) => {
+  const params = getRouterParams(event)
+  const sessionId = params.sessionId
+
+  if (!sessionId || !sessionExists(sessionId)) {
+    setResponseStatus(event, 404)
+    return { error: "Session not found" }
+  }
+
   const eventStream = createEventStream(event)
 
   // Send initial connection event.
@@ -18,8 +32,8 @@ export default defineEventHandler((event) => {
     eventStream.push({ event: "clear", data: "{}" })
   }
 
-  webhookEventBus.on("webhook", onWebhook)
-  webhookEventBus.on("clear", onClear)
+  webhookEventBus.on(`webhook:${sessionId}`, onWebhook)
+  webhookEventBus.on(`clear:${sessionId}`, onClear)
 
   // Keepalive to prevent proxy/browser timeouts.
   const keepalive = setInterval(() => {
@@ -28,8 +42,8 @@ export default defineEventHandler((event) => {
 
   // Cleanup on disconnect.
   eventStream.onClosed(() => {
-    webhookEventBus.off("webhook", onWebhook)
-    webhookEventBus.off("clear", onClear)
+    webhookEventBus.off(`webhook:${sessionId}`, onWebhook)
+    webhookEventBus.off(`clear:${sessionId}`, onClear)
     clearInterval(keepalive)
   })
 
