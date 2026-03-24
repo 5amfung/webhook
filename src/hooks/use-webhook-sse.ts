@@ -2,13 +2,18 @@ import { useEffect } from "react"
 import { useQueryClient } from "@tanstack/react-query"
 import type { WebhookRequest } from "@/lib/types"
 
-const WEBHOOKS_QUERY_KEY = ["webhooks"] as const
+export function webhooksQueryKey(sessionId: string): readonly [string, string] {
+  return ["webhooks", sessionId] as const
+}
 
-export function useWebhookSSE(): void {
+export function useWebhookSSE(sessionId: string | null): void {
   const queryClient = useQueryClient()
 
   useEffect(() => {
-    const eventSource = new EventSource("/api/events")
+    if (!sessionId) return
+
+    const queryKey = webhooksQueryKey(sessionId)
+    const eventSource = new EventSource(`/api/events/${sessionId}`)
 
     eventSource.addEventListener("webhook", (event) => {
       let webhook: WebhookRequest
@@ -19,21 +24,19 @@ export function useWebhookSSE(): void {
       }
 
       queryClient.setQueryData<Array<WebhookRequest>>(
-        WEBHOOKS_QUERY_KEY,
+        queryKey,
         (old = []) => {
           // Deduplicate by id to handle reconnection overlap.
           if (old.some((w) => w.id === webhook.id)) return old
           return [webhook, ...old]
-        }
+        },
       )
     })
 
     eventSource.addEventListener("clear", () => {
-      queryClient.setQueryData(WEBHOOKS_QUERY_KEY, [])
+      queryClient.setQueryData(queryKey, [])
     })
 
     return () => eventSource.close()
-  }, [queryClient])
+  }, [queryClient, sessionId])
 }
-
-export { WEBHOOKS_QUERY_KEY }
