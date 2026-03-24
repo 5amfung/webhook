@@ -23,7 +23,7 @@ function createWebhookEvent(
     ? `/api/webhook/${sid}/${restPath}`
     : `/api/webhook/${sid}`
   const event = mockEvent(url, options)
-  event.context.params = { sessionId: sid, _0: restPath }
+  event.context.params = { sessionId: sid, _: restPath }
   return event
 }
 

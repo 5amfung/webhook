@@ -41,7 +41,8 @@ export default defineEventHandler(async (event) => {
   const contentType = headers["content-type"] ?? null
 
   // Extract the catch-all rest path from router params.
-  const restPath = (params._0 as string | undefined) ?? ""
+  // Nitro uses "_" as the key for unnamed catch-all segments ([...]).
+  const restPath = (params._ as string | undefined) ?? ""
   const path = restPath.replace(/^\//, "") || "/"
 
   // Parse query params.
