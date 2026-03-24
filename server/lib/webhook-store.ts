@@ -11,7 +11,14 @@ interface Session {
   insertionOrder: Array<string>
 }
 
-const sessions = new Map<string, Session>()
+// Use globalThis to share state across module instances. Vite's dev server
+// loads server functions and Nitro route handlers in separate module contexts,
+// creating duplicate Maps if we use a plain module-level variable.
+const SESSIONS_KEY = "__webhook_sessions__"
+
+const sessions: Map<string, Session> =
+  (globalThis as Record<string, unknown>)[SESSIONS_KEY] as Map<string, Session>
+  ?? ((globalThis as Record<string, unknown>)[SESSIONS_KEY] = new Map<string, Session>())
 
 export function createSession(): string {
   const id = crypto.randomUUID()
