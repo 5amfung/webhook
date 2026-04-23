@@ -27,8 +27,9 @@ function buildCurlCommand(baseUrl: string): string {
 }
 
 function Dashboard() {
-  const [selectedWebhook, setSelectedWebhook] =
-    useState<WebhookRequest | null>(null)
+  const [selectedWebhook, setSelectedWebhook] = useState<WebhookRequest | null>(
+    null
+  )
   const [detailOpen, setDetailOpen] = useState(false)
   const [sessionId, setSessionId] = useState<string | null>(null)
 
@@ -78,8 +79,8 @@ function Dashboard() {
       <header className="flex items-center justify-between border-b border-border/50 px-5 py-3">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
-            <div className="bg-primary/15 flex size-8 items-center justify-center rounded-lg">
-              <Radio className="text-primary size-4" />
+            <div className="flex size-8 items-center justify-center rounded-lg bg-primary/15">
+              <Radio className="size-4 text-primary" />
             </div>
             <div>
               <h1 className="text-sm font-semibold tracking-tight">
@@ -87,7 +88,7 @@ function Dashboard() {
               </h1>
               <div className="flex items-center gap-1.5">
                 <div className="status-dot size-1.5 rounded-full bg-emerald-400" />
-                <span className="text-muted-foreground text-[10px] uppercase tracking-widest">
+                <span className="text-[10px] tracking-widest text-muted-foreground uppercase">
                   Listening
                 </span>
               </div>
@@ -97,7 +98,7 @@ function Dashboard() {
         <div className="flex items-center gap-2">
           {webhooks.length > 0 && (
             <>
-              <span className="text-muted-foreground font-mono text-xs tabular-nums">
+              <span className="font-mono text-xs text-muted-foreground tabular-nums">
                 {webhooks.length} request{webhooks.length !== 1 ? "s" : ""}
               </span>
               <Button
@@ -116,11 +117,11 @@ function Dashboard() {
 
       {/* Endpoint bar */}
       <div className="flex items-center gap-3 border-b border-border/50 px-5 py-2.5">
-        <span className="text-muted-foreground text-[10px] font-medium uppercase tracking-widest">
-          Endpoint
+        <span className="text-[10px] font-medium tracking-widest text-muted-foreground uppercase">
+          Webhook URL
         </span>
-        <div className="bg-muted/50 flex flex-1 items-center gap-2 rounded-md border border-border/50 px-3 py-1.5">
-          <Zap className="text-primary size-3 shrink-0" />
+        <div className="flex flex-1 items-center gap-2 rounded-md border border-border/50 bg-muted/50 px-3 py-1.5">
+          <Zap className="size-3 shrink-0 text-primary" />
           <code className="flex-1 truncate font-mono text-xs font-medium">
             {webhookUrl || "Loading..."}
           </code>
@@ -134,22 +135,22 @@ function Dashboard() {
           <div className="relative">
             <div className="absolute inset-0 rounded-full bg-primary/10 blur-2xl" />
             <div className="relative flex size-20 items-center justify-center rounded-2xl border border-border/50 bg-card">
-              <Radio className="text-primary size-8" strokeWidth={1.5} />
+              <Radio className="size-8 text-primary" strokeWidth={1.5} />
             </div>
           </div>
           <div className="text-center">
             <p className="text-base font-medium tracking-tight">
               Waiting for webhooks
             </p>
-            <p className="text-muted-foreground mt-1 text-sm">
+            <p className="mt-1 text-sm text-muted-foreground">
               Send a request to the endpoint above to get started
             </p>
           </div>
           <div className="w-full max-w-lg">
             <div className="flex items-center justify-between rounded-t-lg border border-b-0 border-border/50 bg-card px-4 py-2">
               <div className="flex items-center gap-2">
-                <Terminal className="text-muted-foreground size-3.5" />
-                <span className="text-muted-foreground text-xs font-medium">
+                <Terminal className="size-3.5 text-muted-foreground" />
+                <span className="text-xs font-medium text-muted-foreground">
                   Quick start
                 </span>
               </div>
