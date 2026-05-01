@@ -49,7 +49,7 @@ importers:
         version: 0.577.0(react@19.2.4)
       nitro:
         specifier: latest
-        version: 3.0.260415-beta(dotenv@17.3.1)(jiti@2.6.1)(lru-cache@11.2.7)(vite@8.0.5(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3))
+        version: 3.0.260429-beta(dotenv@17.3.1)(jiti@2.6.1)(lru-cache@11.2.7)(vite@8.0.5(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3))
       react:
         specifier: ^19.2.4
         version: 19.2.4
@@ -118,8 +118,8 @@ importers:
         specifier: ^3.8.1
         version: 3.8.1
       prettier-plugin-tailwindcss:
-        specifier: ^0.7.2
-        version: 0.7.2(prettier@3.8.1)
+        specifier: ^0.8.0
+        version: 0.8.0(prettier@3.8.1)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -2809,16 +2809,16 @@ packages:
   nf3@0.3.16:
     resolution: {integrity: sha512-Gs0xRPpUm2nDkqbi40NJ9g7qDIcjcJzgExiydnq6LAyqhI2jfno8wG3NKTL+IiJsx799UHOb1CnSd4Wg4SG4Pw==}
 
-  nitro@3.0.260415-beta:
-    resolution: {integrity: sha512-J0ntJERWtIdvweZdmkCiF8eOFvP9fIAJR2gpeIDrHbAlYavK41WQfADo/YoZ/LF7RMTZBiPaH/pt2s/nPru9Iw==}
+  nitro@3.0.260429-beta:
+    resolution: {integrity: sha512-KweLVCUN5X9v9g+4yxAyRcz3FcOlnjmt9FyrAIWDxJETJmNT7I0JV0clgsONjo2nI0U5gwedXYA3RaNtF5XWzg==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
     peerDependencies:
-      '@vercel/queue': ^0.1.4
+      '@vercel/queue': ^0.1.6
       dotenv: '*'
       giget: '*'
       jiti: ^2.6.1
-      rollup: ^4.60.1
+      rollup: ^4.60.2
       vite: ^7 || ^8
       xml2js: ^0.6.2
       zephyr-agent: ^0.2.0
@@ -3012,8 +3012,8 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  prettier-plugin-tailwindcss@0.7.2:
-    resolution: {integrity: sha512-LkphyK3Fw+q2HdMOoiEHWf93fNtYJwfamoKPl7UwtjFQdei/iIBoX11G6j706FzN3ymX9mPVi97qIY8328vdnA==}
+  prettier-plugin-tailwindcss@0.8.0:
+    resolution: {integrity: sha512-V8ITGH87yuBDF6JpEZTOVlUz/saAwqb8f3HRgUj8Lh+tGCcrmorhsLpYqzygwFwK0PE2Ib6Mv3M7T/uE2tZV1g==}
     engines: {node: '>=20.19'}
     peerDependencies:
       '@ianvs/prettier-plugin-sort-imports': '*'
@@ -6481,7 +6481,7 @@ snapshots:
 
   nf3@0.3.16: {}
 
-  nitro@3.0.260415-beta(dotenv@17.3.1)(jiti@2.6.1)(lru-cache@11.2.7)(vite@8.0.5(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3)):
+  nitro@3.0.260429-beta(dotenv@17.3.1)(jiti@2.6.1)(lru-cache@11.2.7)(vite@8.0.5(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3)):
     dependencies:
       consola: 3.4.2
       crossws: 0.4.5(srvx@0.11.15)
@@ -6698,7 +6698,7 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-plugin-tailwindcss@0.7.2(prettier@3.8.1):
+  prettier-plugin-tailwindcss@0.8.0(prettier@3.8.1):
     dependencies:
       prettier: 3.8.1
 
